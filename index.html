@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- UIkit CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.35/css/uikit.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- UIkit JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.35/js/uikit.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.35/js/uikit-icons.min.js"></script>
+	<title>Optical Calculator</title>
+</head>
+<body style="width:100vw;height:100vh;background-color: green;overflow: auto">
+	<h1 class="uk-heading-line uk-text-center" style="height: 100px"><span>UI-DBUS Calculator</span></h1>
+	<div style="margin-top: 10vh;">
+		<div class="uk-margin" uk-margin>
+	        <label style="color: black;margin-right: 5px;">Number Of Channels:</label>
+	        <div uk-form-custom="target: true">
+	            
+	            <input id ="NumberOfChannels" class="uk-input uk-form-width-small"  type="number" placeholder="0">
+	        </div>
+	        
+	        <button class="uk-button uk-button-secondary" id="submit-button">Add Input</button>
+	        <button class="uk-button uk-button-secondary" id="channel-submit-button" style="display: none">Submit</button>
+    	</div>
+	</div>
+	<div style="display: flex;flex-direction: column;height: 80vh;overflow: auto;">
+			<div style="display: grid;grid-template-columns: 50vw 50vw;">
+				<div id="inputElement" style="display: grid;height:50vh;grid-template-columns: auto auto auto;overflow: auto;grid-row-gap: 10px;" >
+					
+				</div>
+				<div id="element" style="text-align: center;height: 70vh;overflow-y: auto;">
+					
+				</div>
+			</div>
+			<br>
+			<div style="display: grid;grid-template-columns: 50vw 50vw;width: 100vw; ">
+				<div id ="keys" style="display: grid;grid-template-columns: 12vw 12vw 12vw;min-height: 40vh;grid-column-gap: 5vw;overflow-y: auto; color: #fff">
+
+				</div>
+				<div id="selectedKeys" style="text-align: center;overflow-y: auto;color: #fff;min-height: 40vh;">
+				</div>
+			</div>
+	</div>
+	
+	<!-- <label class="channelLabel" style="display: none">0:</label><input id ="channel" class="uk-input uk-form-width-small"  type="number" placeholder="0"> -->
+</body>
+
+</html>
+
+<style type="text/css">
+	*{
+		background-color: yellow;
+	}
+	body{
+		width: 100vw;
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+		align-items:  center;
+	}
+	#element{
+		color: #fff;
+	}
+	.channelLabel{
+		color:#fff;
+		margin-right: 10px;
+	}
+</style>
