@@ -10,48 +10,19 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.35/js/uikit-icons.min.js"></script>
 	<title>Optical Calculator</title>
 </head>
-<body style="width:100vw;height:100vh;background-color: green;overflow: auto">
-	<h1 class="uk-heading-line uk-text-center" style="height: 100px"><span>UI-DBUS Calculator</span></h1>
-	<div style="margin-top: 10vh;">
-		<div class="uk-margin" uk-margin>
-	        <label style="color: black;margin-right: 5px;">Number Of Channels:</label>
-	        <div uk-form-custom="target: true">
-	            
-	            <input id ="NumberOfChannels" class="uk-input uk-form-width-small"  type="number" placeholder="0">
-	        </div>
-	        
-	        <button class="uk-button uk-button-secondary" id="submit-button">Add Input</button>
-	        <button class="uk-button uk-button-secondary" id="channel-submit-button" style="display: none">Submit</button>
-    	</div>
+<body style="width:100vw;min-height:100vh;background-color: lightgrey;overflow: auto">
+	<h5> 0 8 18 30 44 57 66 77 89 97</h5>
+	<br><br>
+	<div style="width: 100vw;text-align: center;height:100vh;display: grid;" id="element">
+		
 	</div>
-	<div style="display: flex;flex-direction: column;height: 80vh;overflow: auto;">
-			<div style="display: grid;grid-template-columns: 50vw 50vw;">
-				<div id="inputElement" style="display: grid;height:50vh;grid-template-columns: auto auto auto;overflow: auto;grid-row-gap: 10px;" >
-					
-				</div>
-				<div id="element" style="text-align: center;height: 70vh;overflow-y: auto;">
-					
-				</div>
-			</div>
-			<br>
-			<div style="display: grid;grid-template-columns: 50vw 50vw;width: 100vw; ">
-				<div id ="keys" style="display: grid;grid-template-columns: 12vw 12vw 12vw;min-height: 40vh;grid-column-gap: 5vw;overflow-y: auto; color: #fff">
 
-				</div>
-				<div id="selectedKeys" style="text-align: center;overflow-y: auto;color: #fff;min-height: 40vh;">
-				</div>
-			</div>
-	</div>
-	
-	<!-- <label class="channelLabel" style="display: none">0:</label><input id ="channel" class="uk-input uk-form-width-small"  type="number" placeholder="0"> -->
 </body>
 
 </html>
 
 <style type="text/css">
-	*{
-		background-color: yellow;
-	}
+	
 	body{
 		width: 100vw;
 		height: 100vh;
@@ -60,10 +31,154 @@
 		align-items:  center;
 	}
 	#element{
+		color: #000;
+	}
+	#element>div{
+		background-color: red;
+		/*margin: 10px;*/
+		height: 7vh;
+		width: 7vh;
+		margin: auto;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
 		color: #fff;
+	}
+	#element>div>div{
+		background-color: blue;
+		width:7vh;
+		height: 3.5vh;
+		margin-bottom: 0px;
+
 	}
 	.channelLabel{
 		color:#fff;
 		margin-right: 10px;
 	}
 </style>
+
+
+<script type="text/javascript">
+	
+// Triple <Row,Diagonal,Subscript>
+	class Triple {
+	constructor(row,diagonal,subscript){
+		this.diagonal = diagonal
+		this.row = row
+		this.subscript = subscript
+	}
+	getInfo(){
+		var a = []
+		a.push(this.row)
+		a.push(this.diagonal)
+		a.push(this.subscript)
+		return a
+	}
+	changeSubscipt(subscript){
+		this.subscript = subscript
+	}
+	getSubscript(){
+		return this.subscript
+	}
+}
+
+infoArr = [0,8,18,30,44,57,66,77,89,97]
+elements = {}
+TripleHex = {}
+// rows = [] //For Upper triangle
+// negativeRows = [] // For Lower Tria
+function printAnswer(answer){
+
+	var prevN = 0;
+	var differenceArr = []
+	var cssString = ""
+	for (var i=0;i<answer.length;i++){
+		cssString = cssString + "auto "
+	}
+	$("#element").css('grid-template-columns',cssString);
+	// To Assign The Subscripts
+	for(var j=0;j<answer.length;j++){
+		var temp1 = []
+		// var rowTemp = {}
+		for(var m=0;m<prevN+1;m++){
+			temp1.push(0)
+		}
+		for(var i=prevN+1;i<answer.length;i++){
+			var difference = parseInt(answer[i])-parseInt(answer[prevN]);
+			temp1.push(difference)
+			if (difference > 0 && elements.hasOwnProperty(difference)){
+				var count = elements[difference]
+				count = count + 1;
+				elements[difference] = count;
+			}else{
+				elements[difference] = 1;
+			}
+
+			// if (difference > 0 && rowTemp.hasOwnProperty(difference)){
+			// 	var count = rowTemp[difference]
+			// 	count = count + 1;
+			// 	rowTemp[difference] = count;
+			// }else{
+			// 	rowTemp[difference] = 1;
+			// }
+
+		}
+		differenceArr.push(temp1)
+		// rows.push(rowTemp);
+		prevN++;
+	}
+	// console.log(elements);
+	// For lower triangle elements from upper traigngle elements
+	for (var i=0;i<differenceArr.length;i++){
+		for (var j=i+1;j<differenceArr[0].length;j++){
+			difference = -1 * differenceArr[i][j];
+			if (difference < 0 && elements.hasOwnProperty(difference)){
+				var count = elements[difference]
+				count = count + 1;
+				elements[difference] = count;
+			}else{
+				elements[difference] = 1;
+			}
+			
+			differenceArr[j][i] = difference;
+		}
+	}
+	for(var i=0;i<differenceArr.length;i++){
+		var tempDia = 1;
+		for (var j=0;j<differenceArr[0].length;j++){
+			var count = elements[differenceArr[i][j]]
+			if(count > 1){
+				count--;
+				var string  = "<div>" + differenceArr[i][j] +"<div>"+count+"</div></div>"
+				$("#element").append(string)
+				if(TripleHex.hasOwnProperty(differenceArr[i][j])){
+					var tripleObject = new Triple(j,tempDia,count)
+					var tripleArr = TripleHex[differenceArr[i][j]]
+					tripleArr.push(tripleObject)
+					TripleHex[differenceArr[i][j]] = tripleArr;
+				}else{
+					var tripleObject = new Triple(j,tempDia,count)
+					var tripleArr = []
+					tripleArr.push(tripleObject)
+					TripleHex[differenceArr[i][j]] = tripleArr;
+				}
+			}else{
+				var string  = "<div>" + differenceArr[i][j] +"</div>"
+				$("#element").append(string)
+			}
+			tempDia;
+		}
+	}
+	console.log(TripleHex)
+	// console.log(rows)
+	// console.log(negativeRows)
+
+}
+
+$("document").ready(function(){
+	printAnswer(infoArr)
+})
+
+
+</script>
