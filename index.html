@@ -83,7 +83,8 @@
 	}
 }
 
-infoArr = [0,8,18,30,44,57,66,77,89,97]
+// infoArr = [0,8,18,30,44,57,66,77,89,97]
+infoArr = [0,2,3,4,6,7,8,9]
 elements = {}
 TripleHex = {}
 // rows = [] //For Upper triangle
@@ -152,12 +153,12 @@ function printAnswer(answer){
 			if(count > 1){
 				count--;
 				if(TripleHex.hasOwnProperty(differenceArr[i][j])){
-					var tripleObject = new Triple(j,tempDia,count)
+					var tripleObject = new Triple(i,tempDia,count)
 					var tripleArr = TripleHex[differenceArr[i][j]]
 					tripleArr.push(tripleObject)
 					TripleHex[differenceArr[i][j]] = tripleArr;
 				}else{
-					var tripleObject = new Triple(j,tempDia,count)
+					var tripleObject = new Triple(i,tempDia,count)
 					var tripleArr = []
 					tripleArr.push(tripleObject)
 					TripleHex[differenceArr[i][j]] = tripleArr;
@@ -168,8 +169,40 @@ function printAnswer(answer){
 	}
 
 	for (var key in TripleHex){
-		
 			var tripleArr = TripleHex[key]
+			for(var i =0;i<tripleArr.length;i++){
+				var count = 0;
+				var outerObject = tripleArr[i]
+				if (outerObject.diagonal > 1){
+					for(var j=0;j<tripleArr.length;j++){
+						
+						if(i == j){
+							
+						}else{
+							var innerObject = tripleArr[j]
+							maxrow = infoArr.length - 1
+							minrow = 0
+							// if(innerObject.row <= outerObject.row+outerObject.diagonal-1){
+							// 	count ++;
+							// }
+							if(outerObject.row+outerObject.diagonal-1 < maxrow){
+								maxrow = outerObject.row+outerObject.diagonal-1;
+							}
+							if(minrow < outerObject.row - outerObject.diagonal+1){
+								minrow = outerObject.row - outerObject.diagonal+1
+							}
+
+							if(innerObject.row >= minrow && innerObject.row <= maxrow){
+								count++;
+							
+							}
+
+						}
+					}
+					outerObject.subscript = outerObject.subscript - count;
+				}
+				
+			}
 		
 	}
 
@@ -182,7 +215,7 @@ function printAnswer(answer){
 				var tripleArr = TripleHex[differenceArr[i][j]]
 				for(s in tripleArr){
 					var tempObject = tripleArr[s]
-					if(tempObject.row == j && tempObject.diagonal == tempDia){
+					if(tempObject.row == i && tempObject.diagonal == tempDia){
 						count = tempObject.subscript;
 						break;
 					}
