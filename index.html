@@ -144,14 +144,13 @@ function printAnswer(answer){
 			differenceArr[j][i] = difference;
 		}
 	}
+	// both the upper and lower traingle are formed adn the TripleHex is also formed
 	for(var i=0;i<differenceArr.length;i++){
 		var tempDia = 1;
-		for (var j=0;j<differenceArr[0].length;j++){
+		for (var j=i+1;j<differenceArr[0].length;j++){
 			var count = elements[differenceArr[i][j]]
 			if(count > 1){
 				count--;
-				var string  = "<div>" + differenceArr[i][j] +"<div>"+count+"</div></div>"
-				$("#element").append(string)
 				if(TripleHex.hasOwnProperty(differenceArr[i][j])){
 					var tripleObject = new Triple(j,tempDia,count)
 					var tripleArr = TripleHex[differenceArr[i][j]]
@@ -163,11 +162,41 @@ function printAnswer(answer){
 					tripleArr.push(tripleObject)
 					TripleHex[differenceArr[i][j]] = tripleArr;
 				}
+			}
+			tempDia++;
+		}
+	}
+
+	for (var key in TripleHex){
+		
+			var tripleArr = TripleHex[key]
+		
+	}
+
+
+	for(var i=0;i<differenceArr.length;i++){
+		var tempDia = 1;
+		for (var j=0;j<differenceArr[0].length;j++){
+			if(TripleHex.hasOwnProperty(differenceArr[i][j])){
+				count = -1;
+				var tripleArr = TripleHex[differenceArr[i][j]]
+				for(s in tripleArr){
+					var tempObject = tripleArr[s]
+					if(tempObject.row == j && tempObject.diagonal == tempDia){
+						count = tempObject.subscript;
+						break;
+					}
+				}
+				var string  = "<div>" + differenceArr[i][j] +"<div>"+count+"</div></div>"
+				$("#element").append(string)
+			
 			}else{
 				var string  = "<div>" + differenceArr[i][j] +"</div>"
 				$("#element").append(string)
 			}
-			tempDia;
+			if(j>i){
+			tempDia++;
+			}
 		}
 	}
 	console.log(TripleHex)
