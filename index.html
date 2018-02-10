@@ -206,30 +206,87 @@ function printAnswer(answer){
 		
 	}
 
+	//copying it to the lower Triangle
+	for(var i=0;i<differenceArr.length;i++){
+		var tempDia = 1;
+		for (var j=i+1;j<differenceArr[0].length;j++){
+			var actual = -1 * differenceArr[j][i];
+			var sub = -1
+			if(TripleHex.hasOwnProperty(actual)){
+				var tripleArr = TripleHex[actual]
+
+				for(var itr in tripleArr){
+
+					if(tripleArr[itr].row == i && tripleArr[itr].diagonal == tempDia){
+						sub = tripleArr[itr].subscript
+						if(sub>0){
+							if(TripleHex.hasOwnProperty(differenceArr[j][i])){
+								var tripleObject = new Triple(j,tempDia,tripleArr[itr].subscript)
+								var tripleArr1 = TripleHex[differenceArr[j][i]]
+								tripleArr1.push(tripleObject)
+								TripleHex[differenceArr[j][i]] = tripleArr1;
+							}else{
+								var tripleObject = new Triple(j,tempDia,tripleArr[itr].subscript)
+								var tripleArr1 = []
+								tripleArr1.push(tripleObject)
+								TripleHex[differenceArr[j][i]] = tripleArr1;
+							}
+						}
+						break
+					}
+				}
+				
+			}
+			tempDia++;
+		}
+	}
 
 	for(var i=0;i<differenceArr.length;i++){
 		var tempDia = 1;
+		var tempDia1 = i;
 		for (var j=0;j<differenceArr[0].length;j++){
 			if(TripleHex.hasOwnProperty(differenceArr[i][j])){
 				count = -1;
 				var tripleArr = TripleHex[differenceArr[i][j]]
-				for(s in tripleArr){
-					var tempObject = tripleArr[s]
-					if(tempObject.row == i && tempObject.diagonal == tempDia){
-						count = tempObject.subscript;
-						break;
+				if(differenceArr[i][j] > 0){
+					for(s in tripleArr){
+						var tempObject = tripleArr[s]
+						if(tempObject.row == i && tempObject.diagonal == tempDia){
+							count = tempObject.subscript;
+							break;
+						}
+					}
+				}else{
+					for(s in tripleArr){
+						var tempObject = tripleArr[s]
+						if(tempObject.row == i && tempObject.diagonal == tempDia1){
+							count = tempObject.subscript;
+							break;
+						}
 					}
 				}
-				var string  = "<div>" + differenceArr[i][j] +"<div>"+count+"</div></div>"
-				$("#element").append(string)
+				
+				if(count > 0){
+					var string  = "<div>" + differenceArr[i][j] +"<div>"+count+"</div></div>"
+					$("#element").append(string)	
+				}else if (count<0 && differenceArr[i][j] > 0){
+					var string  = "<div>" + differenceArr[i][j] +"<div style = 'background-color:green;'>"+count+"</div></div>"
+					$("#element").append(string)
+				}else{
+					var string  = "<div>" + differenceArr[i][j] +"</div>"
+					$("#element").append(string)
+				}
+				
 			
 			}else{
 				var string  = "<div>" + differenceArr[i][j] +"</div>"
 				$("#element").append(string)
 			}
 			if(j>i){
-			tempDia++;
+				tempDia++;
 			}
+				tempDia1--;
+			
 		}
 	}
 	console.log(TripleHex)
