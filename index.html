@@ -88,7 +88,10 @@ infoArr = [0,2,3,4,6,7,8,9]
 elements = {}
 TripleHex = {}
 // rows = [] //For Upper triangle
-// negativeRows = [] // For Lower Tria
+negativeRows = [] // For Lower Tria
+for(var i=0;i<infoArr.length;i++){
+	negativeRows.push({});
+}
 function printAnswer(answer){
 
 	var prevN = 0;
@@ -225,11 +228,21 @@ function printAnswer(answer){
 								var tripleArr1 = TripleHex[differenceArr[j][i]]
 								tripleArr1.push(tripleObject)
 								TripleHex[differenceArr[j][i]] = tripleArr1;
+								if(negativeRows[j].hasOwnProperty([differenceArr[j][i]])){
+									negativeRows[j][differenceArr[j][i]].push(tempDia)
+								}else{
+									negativeRows[j][differenceArr[j][i]] = [tempDia]
+								}
 							}else{
 								var tripleObject = new Triple(j,tempDia,tripleArr[itr].subscript)
 								var tripleArr1 = []
 								tripleArr1.push(tripleObject)
 								TripleHex[differenceArr[j][i]] = tripleArr1;
+								if(negativeRows[j].hasOwnProperty([differenceArr[j][i]])){
+									negativeRows[j][differenceArr[j][i]].push(tempDia)
+								}else{
+									negativeRows[j][differenceArr[j][i]] = [tempDia]
+								}
 							}
 						}
 						break
@@ -241,9 +254,27 @@ function printAnswer(answer){
 		}
 	}
 
+	for (var key in TripleHex){
+			var tripleArr = TripleHex[key]
+			if(key>0){
+				var actual = -1*key
+				for(var i =0;i<tripleArr.length;i++){
+					if(tripleArr[i].subscript > 0){
+						if(negativeRows[tripleArr[i].row].hasOwnProperty(actual)){
+							
+						}
+					}
+					
+				}
+
+			}
+			
+		
+	}
 	for(var i=0;i<differenceArr.length;i++){
 		var tempDia = 1;
 		var tempDia1 = i;
+		// var tempRow = {}
 		for (var j=0;j<differenceArr[0].length;j++){
 			if(TripleHex.hasOwnProperty(differenceArr[i][j])){
 				count = -1;
@@ -261,6 +292,12 @@ function printAnswer(answer){
 						var tempObject = tripleArr[s]
 						if(tempObject.row == i && tempObject.diagonal == tempDia1){
 							count = tempObject.subscript;
+							// if(tempRow.hasOwnProperty([differenceArr[i][j]])){
+							// 	tempRow[differenceArr[i][j]].push(tempDia1)
+							// }else{
+							// 	tempRow[differenceArr[i][j]] = [tempDia1]
+							// }
+							
 							break;
 						}
 					}
@@ -288,8 +325,9 @@ function printAnswer(answer){
 				tempDia1--;
 			
 		}
+		// negativeRows.push(tempRow);
 	}
-	console.log(TripleHex)
+	// console.log(TripleHex)
 	// console.log(rows)
 	// console.log(negativeRows)
 
