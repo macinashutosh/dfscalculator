@@ -261,6 +261,19 @@ function printAnswer(answer){
 				for(var i =0;i<tripleArr.length;i++){
 					if(tripleArr[i].subscript > 0){
 						if(negativeRows[tripleArr[i].row].hasOwnProperty(actual)){
+							diagonalArr = negativeRows[tripleArr[i].row][actual]
+							for(var dia in diagonalArr){
+								if(tripleArr[i].diagonal == diagonalArr[dia]){
+									console.log(key)
+									console.log(tripleArr[i])
+									var negativeTripleArr = TripleHex[actual]
+									for(var nega in negativeTripleArr){
+										if(tripleArr[i].row == negativeTripleArr[nega].row && negativeTripleArr[nega].diagonal == diagonalArr[dia]){
+											negativeTripleArr[nega].subscript = negativeTripleArr[nega].subscript - 1;
+										}
+									}
+								}
+							}
 							
 						}
 					}
