@@ -10,8 +10,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.35/js/uikit-icons.min.js"></script>
 	<title>Optical Calculator</title>
 </head>
-<body style="width:100vw;height:200vh;background-color: lightgrey;overflow: auto">
-	<h1 class="uk-heading-line uk-text-center" style="height: 100px"><span>UI-DBUS Calculator</span></h1>
+<body style="width:100vw;height:auto;background-color: lightgrey;overflow: auto">
+	<h1 class="uk-heading-line uk-text-center" style="height: 100px"><span>UI-DFS Calculator</span></h1>
 	<!-- <h5> 0 8 18 30 44 57 66 77 89 97</h5> -->
 	<div class="uk-margin" uk-margin>
 	        <label style="color: black;margin-right: 5px;">Number Of Channels:</label>
@@ -24,12 +24,22 @@
 	        <button class="uk-button uk-button-secondary" id="channel-submit-button" style="display: none">Submit</button>
     </div>
     <div style="display: flex;justify-content: center;flex-direction: column;overflow: auto;">
-	    <div id="inputElement" style="display: grid;width:100vw;min-height:30vh;grid-template-columns: auto auto auto auto auto auto auto;overflow: auto;grid-row-gap: 10px;" >
+	    <div id="inputElement" style="display: grid;width:100vw;height:auto;grid-template-columns: auto auto auto auto auto auto auto;overflow: auto;grid-row-gap: 10px;" >
 						
 		</div>
 		
 	</div>
-	<div style="width: 100vw;text-align: center;min-height:70vh;display: grid;overflow: auto" id="element">
+
+	<h1 class="uk-heading-line uk-text-center" style="height: 100px"><span>Step-1</span></h1>
+	<div style="width: 100vw;text-align: center;height:auto;display: grid;grid-row-gap:10px;margin-top: 40px; " id="step1">
+			
+	</div>
+	<h1 class="uk-heading-line uk-text-center" style="height: 100px"><span>Step-2-3</span></h1>
+	<div style="width: 100vw;text-align: center;height:auto;display: grid;grid-row-gap:10px;margin-top: 40px; " id="step2">
+			
+	</div>
+	<h1 class="uk-heading-line uk-text-center" style="height: 100px"><span>Step-4-6</span></h1>
+	<div style="width: 100vw;text-align: center;hieght:auto;display: grid;grid-row-gap:10px;margin-top: 40px; " id="element">
 			
 	</div>
 	<div id="totalFWM" style="text-align: center;margin-top: 10vh;">
@@ -43,7 +53,6 @@
 	
 	body{
 		width: 100vw;
-		height: 100vh;
 		display: flex;
 		flex-direction: column;
 		align-items:  center;
@@ -64,6 +73,46 @@
 		color: #fff;
 	}
 	#element>div>div{
+		background-color: blue;
+		width:7vh;
+		height: 3.5vh;
+		margin-bottom: 0px;
+
+	}
+
+	#step1>div{
+		background-color: red;
+		/*margin: 10px;*/
+		height: 7vh;
+		width: 7vh;
+		margin: auto;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		color: #fff;
+	}
+	#step1>div>div{
+		background-color: blue;
+		width:7vh;
+		height: 3.5vh;
+		margin-bottom: 0px;
+
+	}
+
+	#step2>div{
+		background-color: red;
+		/*margin: 10px;*/
+		height: 7vh;
+		width: 7vh;
+		margin: auto;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		color: #fff;
+	}
+	#step2>div>div{
 		background-color: blue;
 		width:7vh;
 		height: 3.5vh;
@@ -105,24 +154,24 @@
 $("#channel-submit-button").on("click",function(){
 	var array = [];
 	var check = true;
-	$(".channel").each(function(index,value){
-		if(this.value == ""){
-			UIkit.notification({
-   			message: index+'Input is empty',
-    		status: 'danger',
-    		pos: 'top-right',
-    		timeout: 3000
+	// $(".channel").each(function(index,value){
+	// 	if(this.value == ""){
+	// 		UIkit.notification({
+ //   			message: index+'Input is empty',
+ //    		status: 'danger',
+ //    		pos: 'top-right',
+ //    		timeout: 3000
     		
-		});
-			check = false
-		}else{
-			array.push(parseInt(this.value));
-		}
-	});
+	// 	});
+	// 		check = false
+	// 	}else{
+	// 		array.push(parseInt(this.value));
+	// 	}
+	// });
 	if (check == true){
 		// console.log(array)
 		$("#element").empty();
-		
+		array = [0,8,18,30,44,57,66,77,89,97];
 		onSubmitClick(array);
 
 	}
@@ -151,7 +200,24 @@ $("#channel-submit-button").on("click",function(){
 	}
 }
 
-
+function calculateStep1(differenceArr1,elements){
+	for (var i=0;i<differenceArr1.length;i++){
+			for (var j=i+1;j<differenceArr1[0].length;j++){
+				difference = -1 * differenceArr1[i][j];
+				if (difference < 0 && elements.hasOwnProperty(difference)){
+					var count = elements[difference]
+					count = count + 1;
+					elements[difference] = count;
+				}else{
+					elements[difference] = 1;
+				}
+				
+				differenceArr1[j][i] = difference;
+			}
+		}
+	// console.log(differenceArr1)
+	return [differenceArr1,elements]
+}
 
 
 function onSubmitClick(infoArr){
@@ -167,16 +233,18 @@ function onSubmitClick(infoArr){
 	function printAnswer(answer){
 
 		var prevN = 0;
-		var differenceArr = []
+		var differenceArr = [];
+		var elements = {}
 		var cssString = ""
 		for (var i=0;i<answer.length+1;i++){
 			cssString = cssString + "auto "
 		}
+		$("#step1").css('grid-template-columns',cssString);
+		$("#step2").css('grid-template-columns',cssString);
 		$("#element").css('grid-template-columns',cssString);
 		// To Assign The Subscripts
 		for(var j=0;j<answer.length;j++){
 			var temp1 = []
-			// var rowTemp = {}
 			for(var m=0;m<prevN+1;m++){
 				temp1.push(0)
 			}
@@ -190,58 +258,166 @@ function onSubmitClick(infoArr){
 				}else{
 					elements[difference] = 1;
 				}
-
-				// if (difference > 0 && rowTemp.hasOwnProperty(difference)){
-				// 	var count = rowTemp[difference]
-				// 	count = count + 1;
-				// 	rowTemp[difference] = count;
-				// }else{
-				// 	rowTemp[difference] = 1;
-				// }
-
 			}
 			differenceArr.push(temp1)
-			// rows.push(rowTemp);
 			prevN++;
 		}
-		// console.log(elements);
-		// For lower triangle elements from upper traigngle elements
-		for (var i=0;i<differenceArr.length;i++){
-			for (var j=i+1;j<differenceArr[0].length;j++){
-				difference = -1 * differenceArr[i][j];
-				if (difference < 0 && elements.hasOwnProperty(difference)){
-					var count = elements[difference]
-					count = count + 1;
-					elements[difference] = count;
-				}else{
-					elements[difference] = 1;
-				}
-				
-				differenceArr[j][i] = difference;
-			}
-		}
-		// both the upper and lower traingle are formed adn the TripleHex is also formed
+		var tempDiff = differenceArr
+		var step1Answer = calculateStep1(differenceArr,elements);
+		differenceArr = step1Answer[0]
+		elements = step1Answer[1]
+		// console.log(elements)
+		//both the upper and lower traingle are formed adn the TripleHex is also formed
 		for(var i=0;i<differenceArr.length;i++){
 			var tempDia = 1;
-			for (var j=i+1;j<differenceArr[0].length;j++){
+			var tempDiaNeg  = i;
+			for (var j=0;j<differenceArr[0].length;j++){
 				var count = elements[differenceArr[i][j]]
+				// console.log(count)
 				if(count > 1){
 					count--;
-					if(TripleHex.hasOwnProperty(differenceArr[i][j])){
-						var tripleObject = new Triple(i,tempDia,count)
-						var tripleArr = TripleHex[differenceArr[i][j]]
-						tripleArr.push(tripleObject)
-						TripleHex[differenceArr[i][j]] = tripleArr;
+					// console.log(differenceArr[i][j])
+					if (differenceArr[i][j] > 0){
+						if(TripleHex.hasOwnProperty(differenceArr[i][j])){
+							var tripleObject = new Triple(i,tempDia,count)
+							var tripleArr = TripleHex[differenceArr[i][j]]
+							tripleArr.push(tripleObject)
+							TripleHex[differenceArr[i][j]] = tripleArr;
+						}else{
+							var tripleObject = new Triple(i,tempDia,count)
+							var tripleArr = []
+							tripleArr.push(tripleObject)
+							TripleHex[differenceArr[i][j]] = tripleArr;
+						}
 					}else{
-						var tripleObject = new Triple(i,tempDia,count)
-						var tripleArr = []
-						tripleArr.push(tripleObject)
-						TripleHex[differenceArr[i][j]] = tripleArr;
+						if(TripleHex.hasOwnProperty(differenceArr[i][j])){
+							var tripleObject = new Triple(i,tempDiaNeg,count)
+							var tripleArr = TripleHex[differenceArr[i][j]]
+							tripleArr.push(tripleObject)
+							TripleHex[differenceArr[i][j]] = tripleArr;
+						}else{
+							var tripleObject = new Triple(i,tempDiaNeg,count)
+							var tripleArr = []
+							tripleArr.push(tripleObject)
+							TripleHex[differenceArr[i][j]] = tripleArr;
+						}
+						
 					}
+					
 				}
-				tempDia++;
+				tempDiaNeg-- ;
+				if(j>i){
+					tempDia++;	
+				}
+				
 			}
 		}
+		// console.log(TripleHex)
+
+		// Printing Step1
+		for(var i=0;i<differenceArr.length;i++){
+			var tempDia = 1;
+			var tempDia1 = i;
+			// var tempRow = {}
+
+			var countOverall  = 0
+			for (var j=0;j<differenceArr[0].length;j++){
+				if(TripleHex.hasOwnProperty(differenceArr[i][j])){
+					count = -1;
+					var tripleArr = TripleHex[differenceArr[i][j]]
+					if(differenceArr[i][j] > 0){
+						for(s in tripleArr){
+							var tempObject = tripleArr[s]
+							if(tempObject.row == i && tempObject.diagonal == tempDia){
+								count = tempObject.subscript;
+								countOverall = countOverall + count
+								break;
+							}
+						}
+					}else{
+						for(s in tripleArr){
+							var tempObject = tripleArr[s]
+							if(tempObject.row == i && tempObject.diagonal == tempDia1){
+								count = tempObject.subscript;
+								countOverall = countOverall + count
+								break;
+							}
+						}
+					}
+					
+					if(count > 0){
+						var string  = "<div>" + differenceArr[i][j] +"<div>"+count+"</div></div>"
+						$("#step1").append(string)	
+					}else if (count<=0 && differenceArr[i][j] > 0){
+						var string  = "<div>" + differenceArr[i][j] +"<div style = 'background-color:green;'>"+count+"</div></div>"
+						$("#step1").append(string)
+					}else{
+						var string  = "<div>" + differenceArr[i][j] +"</div>"
+						$("#step1").append(string)
+					}
+					
+				
+				}else{
+					var string  = "<div style='opacity:0.5;'>" + differenceArr[i][j] +"</div>"
+					$("#step1").append(string)
+				}
+				if(j>i){
+					tempDia++;
+				}
+					tempDia1--;
+
+				
+			}
+			var string = "<div style='background-color:black'>"+countOverall+"</div>"
+			totalFWM = totalFWM + countOverall;
+				$("#step1").append(string)
+			// negativeRows.push(tempRow);
+		}
+
+
+		// for(var i=0;i<differenceArr.length;i++){
+		// 	var tempDia = 1;
+		// 	for (var j=i+1;j<differenceArr[0].length;j++){
+		// 		var actual = -1 * differenceArr[j][i];
+		// 		var sub = -1
+		// 		if(TripleHex.hasOwnProperty(actual)){
+		// 			var tripleArr = TripleHex[actual]
+
+		// 			for(var itr in tripleArr){
+
+		// 				if(tripleArr[itr].row == i && tripleArr[itr].diagonal == tempDia){
+		// 					sub = tripleArr[itr].subscript
+		// 					if(sub>0){
+		// 						if(TripleHex.hasOwnProperty(differenceArr[j][i])){
+		// 							var tripleObject = new Triple(j,tempDia,tripleArr[itr].subscript)
+		// 							var tripleArr1 = TripleHex[differenceArr[j][i]]
+		// 							tripleArr1.push(tripleObject)
+		// 							TripleHex[differenceArr[j][i]] = tripleArr1;
+		// 							if(negativeRows[j].hasOwnProperty([differenceArr[j][i]])){
+		// 								negativeRows[j][differenceArr[j][i]].push(tempDia)
+		// 							}else{
+		// 								negativeRows[j][differenceArr[j][i]] = [tempDia]
+		// 							}
+		// 						}else{
+		// 							var tripleObject = new Triple(j,tempDia,tripleArr[itr].subscript)
+		// 							var tripleArr1 = []
+		// 							tripleArr1.push(tripleObject)
+		// 							TripleHex[differenceArr[j][i]] = tripleArr1;
+		// 							if(negativeRows[j].hasOwnProperty([differenceArr[j][i]])){
+		// 								negativeRows[j][differenceArr[j][i]].push(tempDia)
+		// 							}else{
+		// 								negativeRows[j][differenceArr[j][i]] = [tempDia]
+		// 							}
+		// 						}
+		// 					}
+		// 					break
+		// 				}
+		// 			}
+					
+		// 		}
+		// 		tempDia++;
+		// 	}
+		// }
 
 		for (var key in TripleHex){
 				var tripleArr = TripleHex[key]
@@ -249,25 +425,31 @@ function onSubmitClick(infoArr){
 					var count = 0;
 					var outerObject = tripleArr[i]
 					if (outerObject.diagonal > 1){
+						// console.log(key)
 						for(var j=0;j<tripleArr.length;j++){
 							
 							if(i == j){
 								
 							}else{
 								var innerObject = tripleArr[j]
+
 								maxrow = infoArr.length - 1
 								minrow = 0
 								// if(innerObject.row <= outerObject.row+outerObject.diagonal-1){
 								// 	count ++;
 								// }
-								if(outerObject.row+outerObject.diagonal-1 < maxrow){
-									maxrow = outerObject.row+outerObject.diagonal-1;
+								minrow = outerObject.row - (outerObject.diagonal-1)
+								maxrow = outerObject.row + (outerObject.diagonal-1)
+								if(minrow < 0){
+									minrow = 0;
 								}
-								if(minrow < outerObject.row - outerObject.diagonal+1){
-									minrow = outerObject.row - outerObject.diagonal+1
+								if(maxrow > infoArr.length - 1){
+									maxrow = infoArr.length - 1;
 								}
-
-								if(innerObject.row >= minrow && innerObject.row <= maxrow){
+								// console.log(outerObject)
+								// console.log(maxrow)
+								// console.log(minrow)
+								if((innerObject.row >= minrow && innerObject.row<outerObject.row) ||( innerObject.row>outerObject.row && innerObject.row <= maxrow)) {
 									count++;
 								
 								}
@@ -281,51 +463,76 @@ function onSubmitClick(infoArr){
 			
 		}
 
-		//copying it to the lower Triangle
+		// console.log(TripleHex)
+		var negativeRows = []
+
 		for(var i=0;i<differenceArr.length;i++){
 			var tempDia = 1;
-			for (var j=i+1;j<differenceArr[0].length;j++){
-				var actual = -1 * differenceArr[j][i];
-				var sub = -1
-				if(TripleHex.hasOwnProperty(actual)){
-					var tripleArr = TripleHex[actual]
+			var tempDia1 = i;
+			var tempRow = {}
 
-					for(var itr in tripleArr){
-
-						if(tripleArr[itr].row == i && tripleArr[itr].diagonal == tempDia){
-							sub = tripleArr[itr].subscript
-							if(sub>0){
-								if(TripleHex.hasOwnProperty(differenceArr[j][i])){
-									var tripleObject = new Triple(j,tempDia,tripleArr[itr].subscript)
-									var tripleArr1 = TripleHex[differenceArr[j][i]]
-									tripleArr1.push(tripleObject)
-									TripleHex[differenceArr[j][i]] = tripleArr1;
-									if(negativeRows[j].hasOwnProperty([differenceArr[j][i]])){
-										negativeRows[j][differenceArr[j][i]].push(tempDia)
-									}else{
-										negativeRows[j][differenceArr[j][i]] = [tempDia]
-									}
-								}else{
-									var tripleObject = new Triple(j,tempDia,tripleArr[itr].subscript)
-									var tripleArr1 = []
-									tripleArr1.push(tripleObject)
-									TripleHex[differenceArr[j][i]] = tripleArr1;
-									if(negativeRows[j].hasOwnProperty([differenceArr[j][i]])){
-										negativeRows[j][differenceArr[j][i]].push(tempDia)
-									}else{
-										negativeRows[j][differenceArr[j][i]] = [tempDia]
-									}
-								}
+			var countOverall  = 0
+			for (var j=0;j<differenceArr[0].length;j++){
+				if(TripleHex.hasOwnProperty(differenceArr[i][j])){
+					count = -1;
+					var tripleArr = TripleHex[differenceArr[i][j]]
+					if(differenceArr[i][j] > 0){
+						for(s in tripleArr){
+							var tempObject = tripleArr[s]
+							if(tempObject.row == i && tempObject.diagonal == tempDia){
+								count = tempObject.subscript;
+								countOverall = countOverall + count
+								break;
 							}
-							break
+						}
+					}else{
+						for(s in tripleArr){
+							var tempObject = tripleArr[s]
+							if(tempObject.row == i && tempObject.diagonal == tempDia1){
+								count = tempObject.subscript;
+								countOverall = countOverall + count;
+								// console.log(differenceArr[i][j]+"-->"+count)
+								if(tempRow.hasOwnProperty([differenceArr[i][j]])){
+									tempRow[differenceArr[i][j]].push(tempDia1)
+								}else{
+									tempRow[differenceArr[i][j]] = [tempDia1]
+								}
+								
+								break;
+							}
 						}
 					}
 					
+					if(count > 0){
+						var string  = "<div>" + differenceArr[i][j] +"<div>"+count+"</div></div>"
+						$("#step2").append(string)	
+					}else if (count<=0 ){
+						var string  = "<div>" + differenceArr[i][j] +"<div style = 'background-color:green;'>"+count+"</div></div>"
+						$("#step2").append(string)
+					}else{
+						var string  = "<div>" + differenceArr[i][j] +"</div>"
+						$("#step2").append(string)
+					}
+					
+				
+				}else{
+					var string  = "<div style='opacity:0.5;'>" + differenceArr[i][j] +"</div>"
+					$("#step2").append(string)
 				}
-				tempDia++;
+				if(j>i){
+					tempDia++;
+				}
+					tempDia1--;
+
+				
 			}
+			var string = "<div style='background-color:black'>"+countOverall+"</div>"
+			totalFWM = totalFWM + countOverall;
+				$("#step2").append(string)
+			negativeRows.push(tempRow);
 		}
 
+		// console.log(negativeRows)
 		for (var key in TripleHex){
 				var tripleArr = TripleHex[key]
 				if(key>0){
@@ -337,8 +544,9 @@ function onSubmitClick(infoArr){
 								for(var dia in diagonalArr){
 									if(tripleArr[i].diagonal == diagonalArr[dia]){
 										console.log(key)
-										console.log(tripleArr[i])
+										// console.log(tripleArr[i])
 										var negativeTripleArr = TripleHex[actual]
+										console.log(negativeTripleArr)
 										for(var nega in negativeTripleArr){
 											if(tripleArr[i].row == negativeTripleArr[nega].row && negativeTripleArr[nega].diagonal == diagonalArr[dia]){
 												negativeTripleArr[nega].subscript = negativeTripleArr[nega].subscript - 1;
@@ -346,7 +554,7 @@ function onSubmitClick(infoArr){
 										}
 									}
 								}
-								
+
 							}
 						}
 						
@@ -396,8 +604,8 @@ function onSubmitClick(infoArr){
 					if(count > 0){
 						var string  = "<div>" + differenceArr[i][j] +"<div>"+count+"</div></div>"
 						$("#element").append(string)	
-					}else if (count<0 && differenceArr[i][j] > 0){
-						var string  = "<div>" + differenceArr[i][j] +"<div style = 'background-color:green;'>"+count+"</div></div>"
+					}else if (count<=0 ){
+						var string  = "<div>" + differenceArr[i][j] +"<div style = 'background-color:purple;'>"+count+"</div></div>"
 						$("#element").append(string)
 					}else{
 						var string  = "<div>" + differenceArr[i][j] +"</div>"
@@ -406,7 +614,7 @@ function onSubmitClick(infoArr){
 					
 				
 				}else{
-					var string  = "<div>" + differenceArr[i][j] +"</div>"
+					var string  = "<div style='opacity:0.5;'>" + differenceArr[i][j] +"</div>"
 					$("#element").append(string)
 				}
 				if(j>i){
@@ -425,7 +633,7 @@ function onSubmitClick(infoArr){
 		$("#totalFWM").html(string)
 		// console.log(TripleHex)
 		// console.log(rows)
-		// console.log(negativeRows)
+		console.log(negativeRows)
 
 	}
 	printAnswer(infoArr);
